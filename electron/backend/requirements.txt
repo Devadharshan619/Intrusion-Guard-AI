@@ -1,0 +1,9 @@
+flask==3.0.3
+opencv-python==4.9.0.80
+numpy==1.26.4
+pillow==10.4.0
+ultralytics==8.2.0
+python-dotenv==1.0.1
+pyserial==3.5
+torch==2.5.1
+torchvision==0.20.1

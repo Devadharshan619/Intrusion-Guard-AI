@@ -1,0 +1,34 @@
+{
+  "name": "ig3",
+  "version": "3.0.1",
+  "description": "Intrusion Guard 3",
+  "author": "Devadharshan <devadharshan706@gmail.com>",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "axios": "^1.7.7",
+    "electron": "^31.2.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+  "appId": "com.yourcompany.ig3",
+  "productName": "IG3",
+  "asar": true,
+  "files": [
+    "electron/main.js",
+    "electron/preload.js",
+    "electron/renderer/**/*"
+  ],
+  "extraResources": [
+    { "from": "electron/backend", "to": "backend", "filter": ["**/*"] },
+    { "from": "electron/python",  "to": "python",  "filter": ["**/*"] }
+  ],
+  "directories": { "buildResources": "build" },
+  "win": { "target": "nsis", "icon": "build/icon.ico", "artifactName": "IG3-Setup-${version}.exe" },
+  "nsis": { "oneClick": true, "allowToChangeInstallationDirectory": false }
+}
+}

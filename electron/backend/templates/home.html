@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Intrusion Guard v3 — Home</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Intrusion Guard v3</h1>
+    <div class="top-actions"><a class="btn secondary" href="/settings">⚙ Settings</a></div>
+  </header>
+  <main class="container single">
+    <section class="card">
+      <div class="hero">
+        <h2>Choose a mode</h2>
+        <p class="brand">Webcam + External Buzzer</p>
+        <div class="cta">
+          <a class="btn success" href="/live">▶ Live</a>
+          <a class="btn" href="/demo">⬆ Demo (Upload)</a>
+          <a class="btn secondary" href="/settings">⚙ Settings</a>
+        </div>
+      </div>
+    </section>
+    <section class="card">
+      <h2 style="margin-bottom:8px">Status</h2>
+      <div class="actions" style="margin-bottom:10px">
+        <div class="status-pill" id="status-pill">● Checking…</div>
+        <button id="refreshBtn" class="btn secondary" type="button">↻ Refresh</button>
+        <button id="silenceBtn" class="btn danger" type="button">🔕 Silence Siren</button>
+      </div>
+      <div class="grid">
+        <div class="form-group"><label>Source</label><div id="diag-source" class="muted">—</div></div>
+        <div class="form-group"><label>Sound mode</label><div id="diag-sound" class="muted">—</div></div>
+        <div class="form-group"><label>External port</label><div id="diag-port" class="muted">—</div></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div>Snapshots saved to /snapshots</div></footer>
+  <script src="/static/js/theme.js"></script>
+  <script>
+    async function loadDiag(){
+      try{
+        const r = await fetch('/diag');
+        const d = await r.json();
+        const pill = document.getElementById('status-pill');
+        const running = (d?.detector?.running === true) || (d?.running === true);
+        pill.textContent = running ? '● Running' : '● Idle';
+        pill.classList.toggle('ok', !!running);
+        document.getElementById('diag-source').textContent = d?.detector?.source || '—';
+        document.getElementById('diag-sound').textContent  = d?.config?.sound_mode ?? '—';
+        document.getElementById('diag-port').textContent   = d?.buzzer?.port || '—';
+      }catch(e){
+        const pill = document.getElementById('status-pill');
+        pill.textContent = '● Unknown'; pill.classList.remove('ok');
+      }
+    }
+    document.getElementById('refreshBtn')?.addEventListener('click', loadDiag);
+    document.getElementById('silenceBtn')?.addEventListener('click', async ()=>{
+      try{ await fetch('/buzzer_off', { method:'POST' }); }catch(e){}
+      setTimeout(loadDiag, 300);
+    });
+    window.addEventListener('DOMContentLoaded', loadDiag);
+  </script>
+</body>
+</html>

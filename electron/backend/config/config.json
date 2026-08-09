@@ -1,0 +1,19 @@
+{
+  "trigger_mode": "person_only",
+  "use_yolo": true,
+  "person_conf": 0.5,
+  "min_person_area_px": 2000,
+  "motion_min_area": 8000,
+  "snapshot_cooldown_sec": 8,
+  "webcam_index": 0,
+  "email_enabled": true,
+  "email_cooldown_sec": 30,
+  "attach_snapshot": true,
+  "last_email_sent": 0,
+  "sound_mode": "system",
+  "buzzer_serial_port": "",
+  "buzzer_hold_ms": 2000,
+  "GMAIL_ADDRESS": "devadharshan706@gmail.com",
+  "GMAIL_APP_PASSWORD": "ozpf dehu wpcp vtey",
+  "ALERT_TO_EMAIL": "devadharshan706@gmail.com,baluteracom@gmail.com"
+}

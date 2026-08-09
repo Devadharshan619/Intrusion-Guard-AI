@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Intrusion Guard</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body data-mode="{{ page_mode|default('') }}">
+  <header class="topbar">
+    <h1>Intrusion Guard</h1>
+    <div class="top-actions"><a class="btn secondary" href="/home">🏠 Home</a></div>
+  </header>
+  <main class="container single">
+    <section class="card stream">
+      <h2>{{ 'Live' if page_mode=='live' else 'Demo' }}</h2>
+
+      {% if page_mode == 'demo' %}
+      <div class="form-row">
+        <label>🎬 Upload Video</label>
+        <div class="row">
+          <input id="videoFile" type="file" accept="video/*"/>
+          <button id="uploadVideoBtn" class="btn secondary" type="button">Upload</button>
+        </div>
+        <div id="videoProgress" class="progress" hidden><div class="bar"></div></div>
+        <div id="videoCard" class="file-card" hidden>
+          <div class="icon">🎞️</div>
+          <div class="meta">
+            <div class="name" id="vName">—</div>
+            <div class="sub" id="vSub">—</div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="video-wrap">
+        <img id="video" src="" alt="Video stream will appear here" loading="eager" decoding="async"/>
+      </div>
+
+      <div class="actions">
+        <button id="startBtn" class="btn success" type="button">▶ Start</button>
+        <button id="stopBtn" class="btn danger" type="button">⏹ Stop</button>
+        <button id="silenceBtn" class="btn secondary" type="button">🔕 Silence Siren</button>
+        <div class="status-pill" id="status-pill">● Idle</div>
+      </div>
+
+      <div id="events" class="events"></div>
+    </section>
+  </main>
+  <div id="toasts" class="toasts"></div>
+  <footer class="footer"><div>Built for demo</div></footer>
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

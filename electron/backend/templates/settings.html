@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Settings — Intrusion Guard</title>
+  <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Settings</h1>
+    <div class="top-actions"><a class="btn secondary" href="/home">← Home</a></div>
+  </header>
+  <main class="container single">
+    <section class="card controls">
+      <h2>Configure</h2>
+
+      <div class="grid">
+        <div class="form-group">
+          <label>🧠 Detection Strategy</label>
+          <select id="triggerMode">
+            <option value="person_only">Person only (recommended)</option>
+            <option value="motion">Motion (fallback)</option>
+          </select>
+          <small class="muted">Person-only uses YOLO and ignores pets.</small>
+        </div>
+        <div class="form-group"><label>👤 Person confidence</label>
+          <input id="personConf" type="number" step="0.05" min="0.1" max="0.95" value="0.5"/></div>
+        <div class="form-group"><label>🧍 Min person area (px)</label>
+          <input id="minPersonArea" type="number" value="2000" step="500"/></div>
+        <div class="form-group"><label>🎚 Motion min area (px)</label>
+          <input id="motionMinArea" type="number" value="8000" step="500"/></div>
+        <div class="form-group"><label>📸 Snapshot cooldown (sec)</label>
+          <input id="snapCooldown" type="number" value="8" min="1"/></div>
+        <div class="form-group"><label>🔌 Webcam index</label>
+          <input id="webcamIndex" type="number" value="0" min="0" step="1"/></div>
+
+        <div class="form-group"><label>✉️ Email alerts</label>
+          <select id="emailEnabled">
+            <option value="false">Disabled</option>
+            <option value="true">Enabled</option>
+          </select>
+          <small class="muted">Uses Gmail SMTP. Enter Gmail + App Password below.</small>
+        </div>
+        <div class="form-group"><label>⏱ Email cooldown (sec)</label>
+          <input id="emailCooldown" type="number" value="30" min="5"/></div>
+        <div class="form-group"><label><input id="attachSnapshot" type="checkbox" checked/> Attach snapshot</label></div>
+
+        <div class="form-group"><label>📧 Gmail address</label>
+          <input id="gmailAddr" type="text" placeholder="your@gmail.com"/></div>
+        <div class="form-group"><label>🔑 Gmail App password</label>
+          <input id="gmailPass" type="password" placeholder="16-char app password"/></div>
+        <div class="form-group"><label>➡️ Send alerts to</label>
+          <input id="alertTo" type="text" placeholder="recipient@example.com (leave empty to send to Gmail address)"/></div>
+
+        <div class="form-group"><label>🔊 Alert sound output</label>
+          <select id="soundMode">
+            <option value="none">None</option>
+            <option value="system">System speaker</option>
+            <option value="external">External buzzer (serial)</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="serialWrap"><label>🧰 External buzzer serial port</label>
+          <div class="row">
+            <select id="serialSelect" style="min-width:180px"><option value="">(Refresh to list)</option></select>
+            <button id="refreshPorts" class="btn secondary" type="button">↻ Refresh ports</button>
+          </div>
+          <small class="muted">Pick a port above or type one manually:</small>
+          <input id="buzzerSerialPort" type="text" placeholder="e.g., COM4 or /dev/ttyUSB0" value=""/>
+          <div class="row" style="margin-top:6px">
+            <button id="applyPort" class="btn" type="button">🔌 Apply Port</button>
+            <div id="portStatus" class="muted" style="margin-left:8px">—</div>
+          </div>
+        </div>
+
+        <div class="form-group"><label>⏳ Buzzer hold time after detection (ms)</label>
+          <input id="buzzerHoldMs" type="number" value="2000" step="100"/></div>
+      </div>
+
+      <div class="actions" style="margin-top:10px">
+        <button id="saveConfig" class="btn">💾 Save Settings</button>
+        <button id="testEmail" class="btn secondary" type="button">✉️ Test Email</button>
+        <button id="testBuzzer" class="btn success" type="button">🔔 Pulse</button>
+        <button id="buzzOn" class="btn secondary" type="button">ON</button>
+        <button id="buzzOff" class="btn danger" type="button">OFF</button>
+        <button id="buzzBeep" class="btn secondary" type="button">BEEP 800ms</button>
+        <span id="bStatus" class="muted">—</span>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div>Saved settings persist to config/config.json</div></footer>
+  <div id="toasts" class="toasts"></div>
+  <script src="/static/js/theme.js"></script>
+  <script src="/static/js/settings.js"></script>
+</body>
+</html>

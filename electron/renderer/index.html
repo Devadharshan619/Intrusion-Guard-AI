@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Intrusion Guard 3</title>
+  <style>
+    body { font: 14px/1.4 system-ui, Arial; padding: 16px; }
+    #status { margin-bottom: 12px; font-weight: 600; }
+    button { margin-right: 8px; padding: 8px 12px; }
+    #live { display:block; margin-top:12px; max-width:100%; border:1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h2>Intrusion Guard 3</h2>
+  <div id="status">Status: checking…</div>
+  <div>
+    <button id="start">Start webcam</button>
+    <button id="stop">Stop</button>
+    <button id="open">Open frame.jpg</button>
+  </div>
+  <img id="live" alt="Live frame" />
+
+  <script>
+    const base = 'http://127.0.0.1:5123';
+    const statusEl = document.getElementById('status');
+    const imgEl = document.getElementById('live');
+
+    let timer = null;
+
+    async function ping() {
+      try {
+        const r = await fetch(`${base}/health`, { cache: 'no-store' });
+        statusEl.textContent = r.ok ? 'Status: backend OK' : 'Status: backend unreachable';
+      } catch {
+        statusEl.textContent = 'Status: backend unreachable';
+      }
+    }
+
+    async function startWebcam() {
+      // tuned config to reduce duplicate boxes (optional)
+      await fetch(`${base}/config`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          trigger_mode: 'person_only',
+          use_yolo: true,
+          person_conf: 0.45,
+          min_person_area_px: 1500,
+          nms_iou: 0.70,
+          dedup_iou: 0.55,
+          max_det: 10
+        })
+      }).catch(()=>{});
+
+      // start webcam 0
+      await fetch(`${base}/start`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ source: 'webcam', webcam_index: 0 })
+      });
+
+      // start refreshing the image
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => {
+        imgEl.src = `${base}/frame.jpg?bust=${Date.now()}`;
+      }, 300);
+      await ping();
+    }
+
+    async function stopWebcam() {
+      await fetch(`${base}/stop`, { method: 'POST' });
+      if (timer) { clearInterval(timer); timer = null; }
+      imgEl.removeAttribute('src');
+      await ping();
+    }
+
+    function openFrame() {
+      window.open(`${base}/frame.jpg`, '_blank', 'noopener,noreferrer');
+    }
+
+    document.getElementById('start').addEventListener('click', startWebcam);
+    document.getElementById('stop').addEventListener('click', stopWebcam);
+    document.getElementById('open').addEventListener('click', openFrame);
+
+    ping();
+  </script>
+</body>
+</html>
